@@ -29,14 +29,13 @@ defmodule Day3 do
 
   def part_two() do
     input = load_input("./lib/day3/input.txt")
-    chunks = Enum.chunk_every(input, 3)
-    sum = chunks
+    sum = Enum.chunk_every(input, 3)
     |> Enum.map(fn(x) -> x |> Enum.map(& MapSet.new(String.graphemes(&1))) end)
-    |> Enum.map(fn([a,b,c]) -> List.foldl([b,c], a, fn(e, acc) -> MapSet.intersection(acc, e) end) end)
-    |> Enum.map(& MapSet.to_list(&1))
-    |> Enum.map(& hd(&1))
-    |> Enum.map(fn(x) -> hd(String.to_charlist(x)) end)
-    |> Enum.map(& get_prio(&1))
+    |> Enum.map(fn([a,b,c]) -> List.foldl([b,c], a, &MapSet.intersection(&1, &2)) end)
+    |> Enum.map(&MapSet.to_list/1)
+    |> Enum.map(&hd/1)
+    |> Enum.map(&hd(String.to_charlist(&1)))
+    |> Enum.map(&get_prio/1)
     |> Enum.sum()
     IO.inspect sum
   end
