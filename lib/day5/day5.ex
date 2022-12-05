@@ -52,20 +52,16 @@ defmodule Day5 do
   def part_two() do
     input = load_input("./lib/day5/input.txt")
     [crates, moves] = String.split(input, "\n\n")
-    crates = String.split(crates, ["\n", "\r", "\r\n"])
     moves = String.split(moves, ["\n", "\r", "\r\n"])
-    moves = Enum.map(moves, &String.split(&1, ["move", "from", "to", " "], trim: true))
-    moves = Enum.map(moves, fn x -> Enum.map(x, fn y -> {i, ""} = Integer.parse(y); i end) end)
-    dbg moves
+    |> Enum.map(&String.split(&1, ["move", "from", "to", " "], trim: true))
+    |> Enum.map(fn x -> Enum.map(x, fn y -> {i, ""} = Integer.parse(y); i end) end)
 
+    crates = String.split(crates, ["\n", "\r", "\r\n"])
     {raw_rows, crates} = List.pop_at(crates, length(crates)-1)
     {rows, ""} = Integer.parse(String.at(raw_rows,String.length(raw_rows)-1))
     crates = Enum.reverse(crates)
     crate_state = Enum.map(1..rows, & get_letters(&1, crates))
-    dbg crate_state
-
     finished_state = List.foldl(moves, crate_state, fn([m,t,f], acc) -> make_moves2(acc, [m,t,f]) end)
-    dbg finished_state
 
     tops = get_tops(finished_state)
     dbg Enum.join(tops)
@@ -74,20 +70,16 @@ defmodule Day5 do
   def part_one() do
     input = load_input("./lib/day5/input.txt")
     [crates, moves] = String.split(input, "\n\n")
-    crates = String.split(crates, ["\n", "\r", "\r\n"])
     moves = String.split(moves, ["\n", "\r", "\r\n"])
-    moves = Enum.map(moves, &String.split(&1, ["move", "from", "to", " "], trim: true))
-    moves = Enum.map(moves, fn x -> Enum.map(x, fn y -> {i, ""} = Integer.parse(y); i end) end)
-    dbg moves
+    |> Enum.map(&String.split(&1, ["move", "from", "to", " "], trim: true))
+    |> Enum.map(fn x -> Enum.map(x, fn y -> {i, ""} = Integer.parse(y); i end) end)
 
+    crates = String.split(crates, ["\n", "\r", "\r\n"])
     {raw_rows, crates} = List.pop_at(crates, length(crates)-1)
     {rows, ""} = Integer.parse(String.at(raw_rows,String.length(raw_rows)-1))
     crates = Enum.reverse(crates)
     crate_state = Enum.map(1..rows, & get_letters(&1, crates))
-    dbg crate_state
-
     finished_state = List.foldl(moves, crate_state, fn([m,t,f], acc) -> make_moves(acc, [m,t,f]) end)
-    dbg finished_state
 
     tops = get_tops(finished_state)
     dbg Enum.join(tops)
