@@ -4,19 +4,7 @@ defmodule Day7 do
     String.split(text, ["\n", "\r", "\r\n"])
   end
 
-  # # repl
-  # @type instruction :: {command, String.t()}
-  # @type command :: :cd | :ls
-  # @type output :: {integer, String.t()}
-
-  # # filetree
-  # @type ftdir :: %{path: ftpath, name: String.t(), children: [ftchild]}
-  # @type ftpath :: [String.t()]
-  # @type ftchild :: ftdir | ftfile
-  # @type ftfile :: %{name: String.t(), size: integer}
-
   def parse_line(line, state) do
-    # dbg line
     parts = String.split(line)
     case parts do
       ["$" | tail] ->
@@ -41,7 +29,6 @@ defmodule Day7 do
   def do_cd(dirname, {path, tree}) do
     dbg "do_cd path:" <> Enum.join(path, "/") <> " target:" <> dirname
     new_path = path++[dirname]
-    # new_content = [] # overwrites
     new_tree = Map.put(tree, new_path, [])
     {new_path, new_tree}
   end
@@ -61,7 +48,7 @@ defmodule Day7 do
   end
 
   def do_file_info(filesize, {path, tree}) do
-    dbg "filesize:" <> filesize #<> " filename:" <> filename
+    dbg "filesize:" <> filesize
     {content, new_tree} = Map.pop(tree, path)
     new_content = content ++ [{:file, filesize}]
     new_tree = Map.put(new_tree, path, new_content)
@@ -75,14 +62,8 @@ defmodule Day7 do
   def do_calc_sizes(path, tree) do
     content = Map.get(tree, path)
     size = Enum.map(content, &do_calc_size_entry(&1, tree))
-    # size
     Enum.sum(size)
-    # case List.keyfind(content, :dir, 0) do
-    #   nil -> List.foldl(content, 0, fn({_, filesize}, acc) -> acc + String.to_integer(filesize) end)
-    #   _ -> List.foldl(content, 0, fn({_, dirpath}, acc) ->  end)
-    # end
   end
-  # def do_calc_sizes(a, b, _, _), do: MapSet.subset?(b, a)
 
   def do_calc_size_entry({:file, size}, _) do
     String.to_integer(size)
@@ -105,15 +86,12 @@ defmodule Day7 do
     min_space_to_del = 30000000 - free_space
     dbg min_space_to_del
 
-
     all_sizes = Enum.map(tree, fn({k, _}) -> do_calc_sizes(k, tree) end)
     dbg all_sizes
     del_candidates = Enum.filter(all_sizes, fn(x) -> x >= min_space_to_del end)
     |> Enum.sort()
     dbg del_candidates
     dbg hd(del_candidates)
-
-    # {_, tree} = state
   end
 
   def part_one() do
