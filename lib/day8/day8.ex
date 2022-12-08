@@ -16,18 +16,18 @@ defmodule Day8 do
 
   # final state for each inner list
   defp do_create_matrix([], map, _index) do
-    IO.puts "do_create_matrix([], map, _index)"
-    IO.inspect map
+    # IO.puts "do_create_matrix([], map, _index)"
+    # IO.inspect map
     map
   end
 
   # still consuming the list
   defp do_create_matrix([h|t], map, index) do
-    IO.puts "do_create_matrix([h|t], map, index)"
-    IO.inspect h
-    IO.inspect t
-    IO.inspect map
-    IO.inspect index
+    # IO.puts "do_create_matrix([h|t], map, index)"
+    # IO.inspect h
+    # IO.inspect t
+    # IO.inspect map
+    # IO.inspect index
     # if 'h == [1,2,3]' then do_create_matrix(h) will invoke the current function with
     # the do_create_matrix(list, map \\ %{}, index \\ 0) header and default values
     # therefore creating a new Map. In the recursive invocation of this function
@@ -41,11 +41,8 @@ defmodule Day8 do
 
   # a single element left
   defp do_create_matrix(other, _map, _index) do
-    IO.puts "do_create_matrix(other, _map, _index)"
-    IO.inspect other
-    # dbg other
-    # dbg _map
-    # dbg _index
+    # IO.puts "do_create_matrix(other, _map, _index)"
+    # IO.inspect other
     {other, 0} #height, visibility
   end
 
@@ -71,13 +68,11 @@ defmodule Day8 do
     right = List.foldl(Enum.to_list((x+1)..w), [], fn e, acc -> {height, _} = matrix[e][y]; [height]++acc end)
     up    = List.foldl(Enum.to_list(0..(y-1)), [], fn e, acc -> {height, _} = matrix[x][e]; [height]++acc end)
     down  = List.foldl(Enum.to_list((y+1)..h), [], fn e, acc -> {height, _} = matrix[x][e]; [height]++acc end)
-    dbg {x, y}
-    dbg matrix[x][y]
-    dbg {h, w}
-    dbg {left, right, up, down}
+    # dbg {x, y}
+    # dbg matrix[x][y]
+    # dbg {h, w}
+    # dbg {left, right, up, down}
     [left, right, up, down]
-    # left = for i <- 0..(row-1) do
-    # end
   end
 
   def cell_visible?(matrix, x, y, h, w) do
@@ -111,17 +106,14 @@ defmodule Day8 do
 
   def part_one() do
     input = load_input("./lib/day8/input.txt")
-    dbg input
+    # dbg input
     # input = [["1", "2"],["3", "4"]]
     h = length(input)
     w = length(hd(input))
-    # dbg h
-    # dbg w
     matrix = create_matrix(input)
-    dbg matrix
+    # dbg matrix
     matrix_visible = set_visible(matrix, h-1, w-1)
-    dbg matrix_visible
+    # dbg matrix_visible
     dbg count_visible(matrix_visible, h-1, w-1)
-    dbg "hello"
   end
 end
