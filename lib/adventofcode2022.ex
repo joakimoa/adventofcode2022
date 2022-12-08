@@ -18,4 +18,4 @@ defmodule Adventofcode2022 do
   end
 end
 # Adventofcode2022.hello()
-Day7.part_two()
+Day8.part_one()
