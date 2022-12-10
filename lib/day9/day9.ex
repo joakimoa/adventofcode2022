@@ -50,4 +50,70 @@ defmodule Day9 do
     # dbg tvisited
     dbg MapSet.size(tvisited) + 1
   end
+
+  def do_move_tail2({hx, hy}, {tx, ty}) do
+    # dbg tvisited
+    {dx, dy} = {hx-tx, hy-ty}
+    res = cond do
+      # if same row or col
+      (dy == 0) && ((dx > 1) or (dx < -1)) -> {tx+div(dx,2), ty} # if same row
+      (dx == 0) && ((dy > 1) or (dy < -1)) -> {tx, ty+div(dy,2)} # if same col
+      # if diag, two steps away in both dx, dy
+      ((dy > 1) or (dy < -1)) && ((dx > 1) or (dx < -1)) -> {tx+div(dx,2), ty+div(dy,2)}
+      # if diag, multiple rules
+      ((dx != 0) && (dy != 0)) && ((dy > 1) or (dy < -1)) -> {tx+dx, ty+div(dy,2)}
+      ((dx != 0) && (dy != 0)) && ((dx > 1) or (dx < -1)) -> {tx+div(dx,2), ty+dy}
+      # h and t in same pos, or touching in any direction
+      true -> {tx, ty}
+    end
+    # dbg res
+  end
+
+  # hd(rope) should always contain the manually added head_move before invoking this func
+  def update_rope(rope, tvisited) do
+    [head|rest_of_rope] = rope
+    updated_rope = List.foldl(rest_of_rope, [head], fn curr_knot, updated_knots ->
+      # dbg rest_of_rope
+      # dbg head
+      # dbg curr_knot
+      # dbg updated_knots
+      [do_move_tail2(hd(updated_knots), curr_knot)]++updated_knots
+    end)
+    # dbg updated_rope
+    # dbg tvisited
+    {Enum.reverse(updated_rope), MapSet.put(tvisited, hd(updated_rope))}
+  end
+
+  def part_two() do
+    input = load_input("./lib/day9/input.txt")
+    dbg input
+    moves = input
+    |> Enum.map(fn x -> [move, times] = String.split(x); [move] |> List.duplicate(String.to_integer(times)) |> List.flatten end)
+    |> List.flatten
+    dbg moves
+
+    # {hx, hy}, {tx, ty}, tvisited
+    headpositions = moves
+    |> List.foldl([{0,0}], fn x, acc -> [do_move_head(x, hd(acc))]++acc end)
+    |> Enum.reverse
+
+    dbg headpositions
+
+    tvisited = MapSet.new()
+    rope = [{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0},{0,0}]
+    {final_rope, final_tvisited} = List.foldl(headpositions, {rope, tvisited}, fn headpos, {rp, tvis} ->
+      update_rope([headpos]++tl(rp), tvis)
+    end)
+    dbg {final_rope, final_tvisited}
+    dbg MapSet.size(final_tvisited)
+    # {rope, tvisited} = update_rope([Enum.at(headpositions, 1)]++rope, tvisited)
+    # dbg {rope, tvisited}
+
+    # {rope, tvisited} = update_rope([Enum.at(headpositions, 2)]++rope, tvisited)
+    # dbg {rope, tvisited}
+
+    # {rope, tvisited} = update_rope([Enum.at(headpositions, 3)]++rope, tvisited)
+    # dbg {rope, tvisited}
+
+  end
 end
