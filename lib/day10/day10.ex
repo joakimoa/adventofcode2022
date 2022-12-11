@@ -34,7 +34,6 @@ defmodule Day10 do
     dbg nummap
     sum = List.foldl(nummap, 0, fn {_, signal}, acc -> acc+signal end)
     dbg sum
-    dbg "hello"
   end
 
   def part_two() do
@@ -60,22 +59,21 @@ defmodule Day10 do
     end)
     dbg {cyc, reg, regmap}
 
-    dbg Map.get(regmap, 0)
-    dbg Map.get(regmap, 1)
+    # dbg Map.get(regmap, 0)
+    # dbg Map.get(regmap, 1)
 
-    screenoutput = Enum.to_list(0..239)
+    screenoutput = Enum.to_list(0..238)
     |> List.foldl('#', fn x, output ->
       {cyc, reg} = {x+1, Map.get(regmap, x)};
-      dbg {row, hpos} = {div(cyc, 40), reg};
-      overlap = hpos - rem(cyc, 40);
+      # dbg {row, hpos} = {div(cyc, 40), reg};
+      overlap = reg - rem(cyc, 40);
       case (overlap > 1) or (overlap < -1) do
           true -> output++'.'
           false -> output++'#'
       end
     end)
-    dbg screenoutput
+    # dbg screenoutput
 
-    chunk = screenoutput |> Enum.chunk_every(40)
-    Enum.each(chunk, &IO.puts(&1))
+    screenoutput |> Enum.chunk_every(40) |> Enum.each(&IO.puts(&1))
   end
 end
